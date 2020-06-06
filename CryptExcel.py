@@ -25,35 +25,34 @@ alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'
 
 
 
-while True:
-    #Fill Wallet sheet
-    y=2
-    for balance in balances:
-        x=0
-        for i in balance:
-            Wallet[alphabet[x]+str(y)] = balance.get(i)
-            x += 1
-        y += 1
+#Fill Wallet sheet
+y=2
+for balance in balances:
+    x=0
+    for i in balance:
+        Wallet[alphabet[x]+str(y)] = balance.get(i)
+        x += 1
+    y += 1
 
 
-    #Fill DetailledHome
-    y=2
-    for order in trades:
-        x=0
-        for i in order:
-            if i == "time" or i == "updateTime":
-                timestamp = int(str(order.get(i))[:-3])
-                time = datetime.fromtimestamp(timestamp)
-                DetailledHome[alphabet[x]+str(y)] = str(time)
-                x+=1
-            DetailledHome[alphabet[x]+str(y)] = order.get(i)
+#Fill DetailledHome
+y=2
+for order in trades:
+    x=0
+    for i in order:
+        if i == "time" or i == "updateTime":
+            timestamp = int(str(order.get(i))[:-3])
+            time = datetime.fromtimestamp(timestamp)
+            DetailledHome[alphabet[x]+str(y)] = str(time)
             x+=1
-        y+=1
+        DetailledHome[alphabet[x]+str(y)] = order.get(i)
+        x+=1
+    y+=1
 
-    #Fill Values
-    for i in range(len(prices)):
-        values[f'A{i+2}'] = prices[i].get('symbol')
-        values[f'B{i+2}'] = prices[i].get('price')
+#Fill Values
+for i in range(len(prices)):
+    values[f'A{i+2}'] = prices[i].get('symbol')
+    values[f'B{i+2}'] = prices[i].get('price')
 
-    #Save Excel
-    workbook.save('trading.xlsx')
+#Save Excel
+workbook.save('trading.xlsx')
