@@ -1,7 +1,10 @@
+from infi.systray import SysTrayIcon
 from binance.client import Client
 from datetime import datetime
 from time import sleep
 import openpyxl
+import warnings
+import os
 
 #Read CryptExcel.config
 f = open("CryptExcel.config", "r")
@@ -10,6 +13,31 @@ api_key = content[0].replace("api_key", "").replace("=", "").strip()
 secret_key = content[1].replace("secret_key", "").replace("=", "").strip()
 pairs = content[2].replace("pairs", "").replace("=", "").replace(" ", "").strip().split(",")
 refresh = int(content[3].replace("refresh", "").replace("=", "").strip())
+if refresh<10:
+    refresh = 10
+
+#Tray icon
+def left(systray):
+    global run
+    print("Close CryptExcel")
+    run = False
+
+def config_file(systray):
+    os.startfile("CryptExcel.config")
+
+def trading_sheet(systray):
+    os.startfile("trading.xlsx")
+
+def open_folder(systray):
+    os.startfile(os.getcwd())
+
+options_menu = (("Open folder", None, open_folder), ("Config file", None, config_file), ("Trading sheet", None, trading_sheet), ("Close", None, left))
+tray = SysTrayIcon("assets/icon.ico", "CryptExcel", options_menu)
+tray.start()
+
+#Other
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+run=True
 
 def modify():
     #Binance API
@@ -116,6 +144,12 @@ def modify():
         print('Not saved because file is open...')
         pass
 
-while True:
+while run:
     modify()
-    sleep(refresh)
+    for i in range(refresh):
+        if run==True:
+            sleep(1)
+        else:
+            break
+
+tray.shutdown()
